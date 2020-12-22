@@ -11,40 +11,48 @@
 
 namespace mros {
 
-class VisualizationMarkerPublisher{
+  class VisualizationMarkerPublisher{
 
-public:
+  public:
     explicit VisualizationMarkerPublisher( const ros::NodeHandlePtr nh ) : nh_( nh ) {
-        //marker default setting
-        defaultSetting();
+      //marker default setting
+      defaultSetting();
     }
 
-    void Start( uint fq, std::string topic ){
-        timer_ = nh_->createTimer( ros::Duration( 1.0 / double(fq) ), &mros::VisualizationMarkerPublisher::timerCallBack, this );
-        publisher_ = nh_->advertise<visualization_msgs::Marker>( topic , 10 );
+    //points_max：轨迹允许最大点数，设置为负数则不做限制
+    void Start( const std::string& topic, const int fq, const int points_max = -1 ){
+      timer_ = nh_->createTimer( ros::Duration( 1.0 / double(fq) ), &mros::VisualizationMarkerPublisher::timerCallBack, this );
+      publisher_ = nh_->advertise<visualization_msgs::Marker>( topic , 10 );
+      points_max_ = points_max;
     }
 
     void SetMarker( std::string frame_id, int id , double scale, float r, float g, float b, float a ){
-        marker_points_->header.frame_id = frame_id;
-        marker_points_->type = visualization_msgs::Marker::POINTS;
-        marker_points_->action = visualization_msgs::Marker::ADD;
-        marker_points_->id = id;
-        marker_points_->lifetime = ros::Duration();
+      marker_points_->header.frame_id = frame_id;
+      marker_points_->type = visualization_msgs::Marker::POINTS;
+      marker_points_->action = visualization_msgs::Marker::ADD;
+      marker_points_->id = id;
+      marker_points_->lifetime = ros::Duration();
 
-        marker_points_->scale.x = scale;
-        marker_points_->scale.y = scale;
-        //points.scale.z = 0.02;
+      marker_points_->scale.x = scale;
+      marker_points_->scale.y = scale;
+      //points.scale.z = 0.02;
 
-        marker_points_->color.r = r;
-        marker_points_->color.g = g;
-        marker_points_->color.b = b;
-        marker_points_->color.a = a;
+      marker_points_->color.r = r;
+      marker_points_->color.g = g;
+      marker_points_->color.b = b;
+      marker_points_->color.a = a;
     }
 
     void AddPoint( const geometry_msgs::Point  p ){
-        marker_points_->points.push_back( p );
+      marker_points_->points.push_back( p );
+      if( points_max_ >= 0 ){
+        if( marker_points_->points.size() > ulong( points_max_ ) ){
+          marker_points_->points.erase( marker_points_->points.begin() );
+        }
+      }
     }
-private:
+
+  private:
 
     ros::NodeHandlePtr nh_;
     ros::Timer timer_;
@@ -52,26 +60,27 @@ private:
 
     visualization_msgs::Marker::Ptr marker_points_ =
         visualization_msgs::Marker::Ptr( new visualization_msgs::Marker );
+    int points_max_;
 
     void timerCallBack( const ros::TimerEvent &event ){
-        //ROS_INFO("visualization timer callback!");
-        marker_points_->header.stamp = ros::Time::now();
-        publisher_.publish( marker_points_ );
+      //ROS_INFO("visualization timer callback!");
+      marker_points_->header.stamp = ros::Time::now();
+      publisher_.publish( marker_points_ );
     }
     void defaultSetting( void ){
-        marker_points_->header.frame_id = "map";
-        marker_points_->type = visualization_msgs::Marker::POINTS;
-        marker_points_->action = visualization_msgs::Marker::ADD;
-        marker_points_->id = 1;
-        marker_points_->lifetime = ros::Duration();
-        marker_points_->scale.x = 0.02;
-        marker_points_->scale.y = 0.02;
-        //points.scale.z = 0.02;
-        marker_points_->color.g = 0.7f;
-        marker_points_->color.a = 1.0;
+      marker_points_->header.frame_id = "map";
+      marker_points_->type = visualization_msgs::Marker::POINTS;
+      marker_points_->action = visualization_msgs::Marker::ADD;
+      marker_points_->id = 1;
+      marker_points_->lifetime = ros::Duration();
+      marker_points_->scale.x = 0.02;
+      marker_points_->scale.y = 0.02;
+      //points.scale.z = 0.02;
+      marker_points_->color.g = 0.7f;
+      marker_points_->color.a = 1.0;
     }
 
-};
+  };
 
 
 }

@@ -1,9 +1,12 @@
 ﻿#ifndef DATA_TYPE_CONVERSION_HPP
 #define DATA_TYPE_CONVERSION_HPP
 
+#include <vector>
+#include <Eigen/Core>
+#include <Eigen/Geometry>
+
 #include <geometry_msgs/Pose.h>
 #include <sensor_msgs/Imu.h>
-#include "utility-math/meigen.hpp"
 
 namespace mros {
 
@@ -82,8 +85,8 @@ namespace data_type_conversion {
     }
 
 
-}  //namespace data_type_conversion
+}  //end of namespace data_type_conversion
 
-} // namespace mros
+} // end of namespace mros
 
 #endif // DATA_TYPE_CONVERSION_HPP
