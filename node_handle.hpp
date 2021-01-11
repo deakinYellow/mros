@@ -7,7 +7,6 @@
 namespace mros {
 
 class NodeHandle{
-
 public:
     explicit NodeHandle( const std::string name_space ) : nh_( name_space ) {
         nh =  ros::NodeHandlePtr( &nh_ );
@@ -22,5 +21,4 @@ private:
 
 }
 
-#endif // ROS_NH_HPP
-
+#endif // NODE_HANDLE_HPP

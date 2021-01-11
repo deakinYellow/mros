@@ -29,7 +29,7 @@ namespace data_type_conversion {
     }
 
     static geometry_msgs::Pose EigenPoseToGeometryMsgPose( const Eigen::Vector3d& position,
-                                                    const Eigen::Quaterniond orientation ) {
+                                                           const Eigen::Quaterniond& orientation ) {
         geometry_msgs::Pose  pose;
         pose.position.x = position.x();
         pose.position.y = position.y();
@@ -84,9 +84,9 @@ namespace data_type_conversion {
         return  ret_vector;
     }
 
-
 }  //end of namespace data_type_conversion
 
 } // end of namespace mros
 
 #endif // DATA_TYPE_CONVERSION_HPP
+
