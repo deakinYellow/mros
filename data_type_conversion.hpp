@@ -5,7 +5,9 @@
 #include <Eigen/Core>
 #include <Eigen/Geometry>
 
+#include <geometry_msgs/Point.h>
 #include <geometry_msgs/Pose.h>
+#include <geometry_msgs/Pose2D.h>
 #include <sensor_msgs/Imu.h>
 
 namespace mros {
@@ -82,6 +84,23 @@ namespace data_type_conversion {
         ret_vector.y() = vector[1];
         ret_vector.z() = vector[2];
         return  ret_vector;
+    }
+
+
+    static geometry_msgs::Pose2D GetGeometryPose2D( const double x, const double y, const double theta ){
+      geometry_msgs::Pose2D pose2d;
+      pose2d.x = x;
+      pose2d.y = y;
+      pose2d.theta = theta;
+      return  pose2d;
+    }
+
+    static geometry_msgs::Point GetGeometryPoint( const double x, const double y, const double z ){
+      geometry_msgs::Point point;
+      point.x = x;
+      point.y = y;
+      point.z = z;
+      return point;
     }
 
 }  //end of namespace data_type_conversion

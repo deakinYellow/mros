@@ -3,10 +3,10 @@
 #include <memory>
 #include <ros/ros.h>
 
-#define ENABLE_MLOGD
+//#define ENABLE_MLOGD
+
 #include "parameter.hpp"
 #include "node_handle.hpp"
-
 #include "visualization_marker_publisher.hpp"
 
 
@@ -27,16 +27,15 @@ int main(int argc, char **argv){
   ros::NodeHandlePtr nh_p = ros::NodeHandlePtr( &nh );
   ros::console::set_logger_level( ROSCONSOLE_DEFAULT_NAME, ros::console::levels::Info );
 
-  int markers_max = -1;
   mros::VisualizationMarkerPublisher marker_publisher( nh_p );
-
 
   std::string pub_topic = "/" + node_name +"/marker";
   ROS_INFO("pub topic: %s ", pub_topic.c_str() );
+  int markers_max = -1;
   mros::VisualizationMarkerPubParametersT marker_params =
     mros::VisualizationMarkerPubParameters( pub_topic,30,"map",1,
                                             mros::VISUALIZATION_MARKER_COLOR_YELLOW,
-                                            mros::VISUALIZATION_MARKER_SCALE_01,
+                                            mros::VISUALIZATION_MARKER_SCALE_02,
                                             markers_max );
   marker_publisher.Init( marker_params );
 
@@ -58,8 +57,10 @@ int main(int argc, char **argv){
     ros::spinOnce();
     loop_rate.sleep();
   }
+
   ros::shutdown();
   return 0;
 }
+
 
 

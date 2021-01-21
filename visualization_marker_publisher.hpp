@@ -22,7 +22,6 @@ public:
   }
   //points_max：轨迹允许最大点数，设置为负数则不做限制
   void Init( const VisualizationMarkerPubParametersT& params ){
-
     //ros timer, auto publish
     timer_ = nh_->createTimer( ros::Duration( 1.0 / double(params.fq) ), &mros::VisualizationMarkerPublisher::TimerCallBack, this );
     publisher_ = nh_->advertise<visualization_msgs::Marker>( params.topic , 10 );
@@ -34,9 +33,9 @@ public:
     ColorT color = GetColorRbgValue( params.color );
     //get scale value
     double scale = GetScaleValue( params.scale );
-    ROS_DEBUG("frame_id: %s id: %d color:(%f %f %f) scale: %f",
-             params.frame_id.c_str(), params.id,
-             color.r, color.g, color.b, scale );
+    //ROS_DEBUG("frame_id: %s id: %d color:(%f %f %f) scale: %f",
+             //params.frame_id.c_str(), params.id,
+             //color.r, color.g, color.b, scale );
     SetMarker( params.frame_id, params.id, scale, color.r, color.g, color.b, color.a );
   }
 
@@ -52,13 +51,14 @@ public:
 
     marker_points_->scale.x = scale;
     marker_points_->scale.y = scale;
-    marker_points_->scale.z = scale;
+    marker_points_->scale.z = 0;
 
     marker_points_->color.r = float(r);
     marker_points_->color.g = float(g);
     marker_points_->color.b = float(b);
     marker_points_->color.a = float(a);
   }
+
 
 #if 0
   void SetMarkerColor( const VisualizationMarkerColorsL& color_opition ){
@@ -90,7 +90,7 @@ private:
   int points_max_;
 
   void TimerCallBack( const ros::TimerEvent &event ){
-    ROS_DEBUG("visualization timer callback!");
+    //ROS_DEBUG("visualization timer callback!");
     marker_points_->header.stamp = ros::Time::now();
     publisher_.publish( marker_points_ );
   }
